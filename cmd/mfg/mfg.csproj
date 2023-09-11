@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net7.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>mfg</ToolCommandName>
+    <Version>0.0.1</Version>
+    <AssemblyVersion>0.0.1</AssemblyVersion>
+    <FileVersion>0.0.1</FileVersion>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Title>Micro Fun Generator Tool</Title>
+    <Authors>Iskander Sierra</Authors>
+    <Product>MicroFun</Product>
+    <Description>A generator tool to generate from snippets to whole projects</Description>
+    <PackageProjectUrl>https://github.com/iskandersierra/MicroFun.Generators</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/iskandersierra/MicroFun.Generators</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>tool;cli;generator;tempalte</PackageTags>
+    <IncludeSymbols>False</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE.txt" Link="LICENSE.txt" Pack="true" PackagePath="\" />
+    <None Include="..\..\README.md" Link="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\MicroFun.Generators.Commands\MicroFun.Generators.Commands.csproj" />
+  </ItemGroup>
+
+</Project>
