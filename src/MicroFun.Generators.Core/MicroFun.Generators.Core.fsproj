@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <RootNamespace>MicroFun.Generators</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="CoreDataModel.fs" />
+    <Compile Include="SystemTextJsonDataModel.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MicroFun.Generators.Abstractions\MicroFun.Generators.Abstractions.fsproj" />
+  </ItemGroup>
+
+</Project>

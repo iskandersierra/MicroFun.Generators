@@ -1,0 +1,1 @@
+namespace MicroFun.Generators.Core
