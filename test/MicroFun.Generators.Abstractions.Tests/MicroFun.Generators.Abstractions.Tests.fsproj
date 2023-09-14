@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="CoreDataModelTests.fs" />
+    <Compile Include="DataModelTests.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
@@ -30,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\MicroFun.Generators.Core\MicroFun.Generators.Core.fsproj" />
+    <ProjectReference Include="..\..\src\MicroFun.Generators.Abstractions\MicroFun.Generators.Abstractions.fsproj" />
   </ItemGroup>
 
 </Project>

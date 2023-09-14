@@ -13,7 +13,9 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "MicroFun.Generators.Core", 
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "MicroFun.Generators.Core.Tests", "test\MicroFun.Generators.Core.Tests\MicroFun.Generators.Core.Tests.fsproj", "{513323CB-55D6-44A6-80FD-05BF48192771}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "MicroFun.Generators.Abstractions", "src\MicroFun.Generators.Abstractions\MicroFun.Generators.Abstractions.fsproj", "{4D08CD7A-F13C-465F-A8FE-5AA247E90F7F}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "MicroFun.Generators.Abstractions", "src\MicroFun.Generators.Abstractions\MicroFun.Generators.Abstractions.fsproj", "{4D08CD7A-F13C-465F-A8FE-5AA247E90F7F}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "MicroFun.Generators.Abstractions.Tests", "test\MicroFun.Generators.Abstractions.Tests\MicroFun.Generators.Abstractions.Tests.fsproj", "{30C084CF-D77A-48E6-B69B-4D1B42188333}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,6 +63,18 @@ Global
 		{4D08CD7A-F13C-465F-A8FE-5AA247E90F7F}.Release|x64.Build.0 = Release|Any CPU
 		{4D08CD7A-F13C-465F-A8FE-5AA247E90F7F}.Release|x86.ActiveCfg = Release|Any CPU
 		{4D08CD7A-F13C-465F-A8FE-5AA247E90F7F}.Release|x86.Build.0 = Release|Any CPU
+		{30C084CF-D77A-48E6-B69B-4D1B42188333}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30C084CF-D77A-48E6-B69B-4D1B42188333}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30C084CF-D77A-48E6-B69B-4D1B42188333}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{30C084CF-D77A-48E6-B69B-4D1B42188333}.Debug|x64.Build.0 = Debug|Any CPU
+		{30C084CF-D77A-48E6-B69B-4D1B42188333}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{30C084CF-D77A-48E6-B69B-4D1B42188333}.Debug|x86.Build.0 = Debug|Any CPU
+		{30C084CF-D77A-48E6-B69B-4D1B42188333}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30C084CF-D77A-48E6-B69B-4D1B42188333}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30C084CF-D77A-48E6-B69B-4D1B42188333}.Release|x64.ActiveCfg = Release|Any CPU
+		{30C084CF-D77A-48E6-B69B-4D1B42188333}.Release|x64.Build.0 = Release|Any CPU
+		{30C084CF-D77A-48E6-B69B-4D1B42188333}.Release|x86.ActiveCfg = Release|Any CPU
+		{30C084CF-D77A-48E6-B69B-4D1B42188333}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -69,6 +83,7 @@ Global
 		{EEB24C6D-FF7F-4850-9F1F-3631722E2C87} = {7D20B3C5-DF17-4DDB-A535-613762F1BA15}
 		{513323CB-55D6-44A6-80FD-05BF48192771} = {18EAC725-06EF-489F-B668-3E17C607BB98}
 		{4D08CD7A-F13C-465F-A8FE-5AA247E90F7F} = {7D20B3C5-DF17-4DDB-A535-613762F1BA15}
+		{30C084CF-D77A-48E6-B69B-4D1B42188333} = {18EAC725-06EF-489F-B668-3E17C607BB98}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {417F6178-BFB7-42D3-A6EA-5C90C22F3F61}

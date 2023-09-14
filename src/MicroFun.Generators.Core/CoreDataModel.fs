@@ -6,8 +6,8 @@ open System.Linq
 
 type DataTreeDescriptor =
     { baseUri: Uri
-      getRoots: unit -> DataLinkedNodeDescription seq
       toText: obj -> string
+      getRoots: unit -> DataLinkedNodeDescription seq
       getAttributes: obj -> NamedValueDescription seq
       getChildren: obj -> DataLinkedNodeDescription seq }
 
@@ -87,22 +87,36 @@ module DataModel =
                 tree: IDataTree,
                 parent: IDataLinkedNode voption
             ) as this =
-            let children =
-                lazy
-                    (treeDesc.getChildren elemDesc.value
-                     |> fromNodeDescriptors treeDesc tree (ValueSome this))
-
             let attributes =
                 lazy
                     (treeDesc.getAttributes elemDesc.value
                      |> fromAttrDescriptors treeDesc this)
 
+            let children =
+                lazy
+                    (treeDesc.getChildren elemDesc.value
+                     |> fromNodeDescriptors treeDesc tree (ValueSome this))
+
+            let elements =
+                lazy
+                    (children.Value.OfType<IDataElement>()
+                     |> Seq.toArray
+                    :> IReadOnlyList<IDataElement>)
+
+            let values =
+                lazy
+                    (children.Value.OfType<IDataValue>()
+                     |> Seq.toArray
+                    :> IReadOnlyList<IDataValue>)
+
             interface IDataElement with
                 member this.Parent = parent
                 member this.Tree = tree
                 member this.Name = elemDesc.name
-                member this.Children = children.Value
                 member this.Attributes = attributes.Value
+                member this.Children = children.Value
+                member this.Elements = elements.Value
+                member this.Values = values.Value
 
         type DataValue(treeDesc: DataTreeDescriptor, value: obj, tree: IDataTree, parent: IDataLinkedNode voption) =
             let text = lazy (treeDesc.toText value)
@@ -112,7 +126,6 @@ module DataModel =
                 member this.Tree = tree
                 member this.Value = value
                 member this.Text = text.Value
-
 
     open Impl
 
