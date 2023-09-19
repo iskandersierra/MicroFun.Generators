@@ -9,14 +9,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="TestsUtilities.fs" />
-    <Compile Include="TextTemplateFactoryTests.fs" />
-    <Compile Include="SelectorTemplateFactoryTests.fs" />
+    <Compile Include="ScribanTemplateTests.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FsCheck" Version="2.16.6" />
     <PackageReference Include="FsCheck.Xunit" Version="2.16.6" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
     <PackageReference Include="Unquote" Version="6.1.0" />
@@ -32,7 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\MicroFun.Generators.Core\MicroFun.Generators.Core.fsproj" />
+    <ProjectReference Include="..\..\src\MicroFun.Generators.Scriban\MicroFun.Generators.Scriban.fsproj" />
   </ItemGroup>
 
 </Project>

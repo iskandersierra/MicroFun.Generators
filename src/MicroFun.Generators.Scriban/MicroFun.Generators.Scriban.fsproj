@@ -3,16 +3,19 @@
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <RootNamespace>MicroFun.Generators</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="TextTemplate.fs" />
-    <Compile Include="SelectorTemplateFactory.fs" />
+    <Compile Include="ScribanTemplate.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Scriban" Version="5.9.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\MicroFun.Generators.Abstractions\MicroFun.Generators.Abstractions.fsproj" />
+    <ProjectReference Include="..\MicroFun.Generators.Core\MicroFun.Generators.Core.fsproj" />
   </ItemGroup>
 
 </Project>
