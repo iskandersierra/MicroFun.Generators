@@ -2,12 +2,15 @@
 module MicroFun.Generators.Core.Tests.TestsUtilities
 
 open System
+open System.IO
 open System.Threading.Tasks
 
 open MicroFun.Generators
 
 
-type MockTextTemplate(content: string, baseUri: Uri) =
+type MockTextTemplate(reader: TextReader, baseUri: Uri) =
+    let content = reader.ReadToEnd()
+
     interface ITemplate with
         member this.BaseUri = baseUri
 
@@ -20,5 +23,5 @@ type MockTextTemplateFactory(content: TemplateContent) =
     interface ITemplateFactory with
         member this.CreateTemplateAsync(_, _) =
             task {
-                return MockTextTemplate(content.content, content.baseUri)
+                return MockTextTemplate(content.reader, content.baseUri)
             }

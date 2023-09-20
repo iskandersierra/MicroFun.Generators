@@ -8,6 +8,8 @@
 
   <ItemGroup>
     <Compile Include="Template.fs" />
+    <Compile Include="TemplateContent.fs" />
+    <Compile Include="TemplateFactory.fs" />
   </ItemGroup>
 
 </Project>

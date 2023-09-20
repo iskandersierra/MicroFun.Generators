@@ -157,16 +157,16 @@ let createSampleSelectorTemplateFactory () =
         fun contentType -> contentType = "text/xml"
 
     let xmlFactory: ITemplateFactory =
-        MockTextTemplateFactory(TemplateContent.ofContent "Is XML")
+        MockTextTemplateFactory(TemplateContent.ofText "Is XML")
 
     let htmlPredicate =
         fun contentType -> contentType = "text/html"
 
     let htmlFactory: ITemplateFactory =
-        MockTextTemplateFactory(TemplateContent.ofContent "Is HTML")
+        MockTextTemplateFactory(TemplateContent.ofText "Is HTML")
 
     let fallbackFactory: ITemplateFactory =
-        MockTextTemplateFactory(TemplateContent.ofContent "Is fallback")
+        MockTextTemplateFactory(TemplateContent.ofText "Is fallback")
 
     let config =
         TemplateFactorySelectorConfig.empty
@@ -185,7 +185,7 @@ let ``SelectorTemplateFactory.SelectFactory should select fallback factory`` () 
 
         let templateContent =
             "[green]Hello World![/]"
-            |> TemplateContent.ofContent
+            |> TemplateContent.ofText
             |> TemplateContent.withContentType "text/markup"
 
         let! template =
@@ -204,7 +204,7 @@ let ``SelectorTemplateFactory.SelectFactory should select first factory`` () =
 
         let templateContent =
             "[green]Hello World![/]"
-            |> TemplateContent.ofContent
+            |> TemplateContent.ofText
             |> TemplateContent.withContentType "text/xml"
 
         let! template =
@@ -223,7 +223,7 @@ let ``SelectorTemplateFactory.SelectFactory should select next factory`` () =
 
         let templateContent =
             "[green]Hello World![/]"
-            |> TemplateContent.ofContent
+            |> TemplateContent.ofText
             |> TemplateContent.withContentType "text/html"
 
         let! template =

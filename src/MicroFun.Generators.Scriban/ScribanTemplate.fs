@@ -35,9 +35,10 @@ type ScribanTemplateFactory() =
     interface ITemplateFactory with
         member this.CreateTemplateAsync(content, cancel) =
             task {
-                let template = Template.Parse(content.content, content.baseUri.ToString())
+                let! text = content.reader.ReadToEndAsync(cancel)
+                let template = Template.Parse(text, content.baseUri.ToString())
                 checkTemplate template
-                return ScribanTemplate(template, content.baseUri)
+                return ScribanTemplate(template, content.baseUri) :> ITemplate
             }
 
 type DotLiquidTemplateFactory() =
@@ -46,9 +47,10 @@ type DotLiquidTemplateFactory() =
     interface ITemplateFactory with
         member this.CreateTemplateAsync(content, cancel) =
             task {
-                let template = Template.ParseLiquid(content.content, content.baseUri.ToString())
+                let! text = content.reader.ReadToEndAsync(cancel)
+                let template = Template.ParseLiquid(text, content.baseUri.ToString())
                 checkTemplate template
-                return ScribanTemplate(template, content.baseUri)
+                return ScribanTemplate(template, content.baseUri) :> ITemplate
             }
 
 [<RequireQualifiedAccessAttribute>]

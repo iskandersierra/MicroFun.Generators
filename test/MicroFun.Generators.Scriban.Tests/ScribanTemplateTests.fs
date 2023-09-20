@@ -147,7 +147,7 @@ let ``ScribanTemplateFactory.CreateTemplateAsync should return a scriban-backed 
         let baseUri = "https://www.example.com"
 
         let templateContent =
-            TemplateContent.ofContent @"Hello {{if !name; name=""world""; end }}{{ name }}!"
+            TemplateContent.ofText @"Hello {{if !name; name=""world""; end }}{{ name }}!"
             |> TemplateContent.withContentType "text/plain+scriban"
             |> TemplateContent.withBaseUri (Uri(baseUri))
 
@@ -169,7 +169,7 @@ let ``ScribanTemplateFactory.CreateTemplateAsync should fail from a dotliquid te
         let baseUri = "https://www.example.com"
 
         let templateContent =
-            TemplateContent.ofContent @"Hello {% if name %}{{name}}{% else %}world{% endif %}!"
+            TemplateContent.ofText @"Hello {% if name %}{{name}}{% else %}world{% endif %}!"
             |> TemplateContent.withContentType "text/plain+liquid"
             |> TemplateContent.withBaseUri (Uri(baseUri))
 
@@ -200,7 +200,7 @@ let ``DotLiquidTemplateFactory.CreateTemplateAsync should return a dotliquid-bac
         let baseUri = "https://www.example.com"
 
         let templateContent =
-            TemplateContent.ofContent @"Hello {% if name %}{{name}}{% else %}world{% endif %}!"
+            TemplateContent.ofText @"Hello {% if name %}{{name}}{% else %}world{% endif %}!"
             |> TemplateContent.withContentType "text/plain+liquid"
             |> TemplateContent.withBaseUri (Uri(baseUri))
 
@@ -222,7 +222,7 @@ let ``DotLiquidTemplateFactory.CreateTemplateAsync should fail from a scriban te
         let baseUri = "https://www.example.com"
 
         let templateContent =
-            TemplateContent.ofContent @"Hello {{if !name; name=""world""; end }}{{ name }}!"
+            TemplateContent.ofText @"Hello {{if !name; name=""world""; end }}{{ name }}!"
             |> TemplateContent.withContentType "text/plain+scriban"
             |> TemplateContent.withBaseUri (Uri(baseUri))
 

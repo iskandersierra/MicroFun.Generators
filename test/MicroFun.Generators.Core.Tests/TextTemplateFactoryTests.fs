@@ -1,6 +1,7 @@
 module MicroFun.Generators.Core.Tests.TextTemplateFactoryTests
 
 open System
+open System.IO.Enumeration
 open Xunit
 open Swensen.Unquote
 
@@ -18,7 +19,7 @@ let ``TextTemplateFactory creates a TextTemplate`` () =
         let contentType = "text/plain"
         let baseUri = "https://example.com/"
 
-        let templateContent = TemplateContent.create baseUri contentType helloWorld
+        let templateContent = TemplateContent.createText baseUri contentType helloWorld
 
         let! template =
             TextTemplateFactory.Default
@@ -30,7 +31,7 @@ let ``TextTemplateFactory creates a TextTemplate`` () =
 [<Fact>]
 let ``TextTemplate.RenderAsync(obj) returns the helloWorld`` () =
     task {
-        let templateContent = TemplateContent.ofContent helloWorld
+        let templateContent = TemplateContent.ofText helloWorld
 
         let! template =
             TextTemplateFactory.Default

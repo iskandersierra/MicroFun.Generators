@@ -16,10 +16,10 @@ type TemplateFactorySelectorConfig =
 module TemplateFactorySelectorConfig =
     let empty = { fallback = None; factories = [] }
 
-    let inline withFallback fallback config =
+    let withFallback fallback config =
         { config with fallback = Some fallback }
 
-    let inline withDefaultFallback config = { config with fallback = None }
+    let withDefaultFallback config = { config with fallback = None }
 
     let withPredicate factory predicate config =
         { config with
