@@ -1,43 +1,41 @@
 namespace MicroFun.Generators
 
 open System
-open System.IO
 open System.Threading
 open System.Threading.Tasks
 
-type RenderTemplateContext = {
-    model: obj
-    writer: TextWriter
-}
+
+type TemplateRenderContext = { model: obj }
+
+
+[<RequireQualifiedAccess>]
+module TemplateRenderContext =
+    let create model = { model = model }
+
 
 type ITemplate =
-    abstract BaseUri: Uri with get
-    abstract RenderAsync: context: RenderTemplateContext * cancel: CancellationToken -> Task
+    inherit IDisposable
+    abstract BaseUri : Uri
+    abstract RenderAsync : context: TemplateRenderContext * cancel: CancellationToken -> Task<IOutputContent>
 
-[<AutoOpen>]
-module TemplateExtensions =
-    type ITemplate with
-        member this.RenderAsync(model: obj, cancel: CancellationToken) =
-            task {
-                use writer = new StringWriter()
-                let context = { model = model; writer = writer }
-                do! this.RenderAsync(context, cancel)
-                return writer.ToString()
-            }
 
 [<RequireQualifiedAccess>]
 module Template =
     [<RequireQualifiedAccess>]
     module WithCancel =
-        let inline renderContext cancel (context: RenderTemplateContext) (template: ITemplate) =
+        let renderContext cancel (context: TemplateRenderContext) (template: ITemplate) =
             template.RenderAsync(context, cancel)
 
-        let inline renderModel cancel (model: obj) (template: ITemplate) =
-            template.RenderAsync(model, cancel)
+        let renderModel cancel (model: obj) =
+            model
+            |> TemplateRenderContext.create
+            |> renderContext cancel
 
 
-    let inline renderContext (context: RenderTemplateContext) (template: ITemplate) =
-        template.RenderAsync(context, CancellationToken.None)
+    let renderContext (context: TemplateRenderContext) =
+        WithCancel.renderContext CancellationToken.None context
 
-    let inline renderModel (model: obj) (template: ITemplate) =
-        template.RenderAsync(model, CancellationToken.None)
+    let renderModel (model: obj) =
+        model
+        |> TemplateRenderContext.create
+        |> renderContext

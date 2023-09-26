@@ -2,43 +2,36 @@ namespace MicroFun.Generators
 
 open System
 open System.IO
-open System.Threading
-open System.Threading.Tasks
+open System.Text
 
 
-type internal TextTemplate(reader: TextReader, baseUri: Uri) =
-    let mutable text = ""
-    let mutable isLoaded = false
-    let loadLock = new SemaphoreSlim(1, 1)
-
-    let getText() =
-        task {
-            if isLoaded then
-                return text
-            else
-                do! loadLock.WaitAsync()
-                use _ = defer (fun() -> loadLock.Release() |> ignore)
-
-                let! buffer = reader.ReadToEndAsync()
-
-                text <- buffer
-
-                return text
-        }
+type internal TextTemplate(text: string, baseUri: Uri) =
+    let relativeUri = Uri("output.txt", UriKind.Relative)
+    let contentType = "text/plain"
+    let encoding = Encoding.UTF8
 
     interface ITemplate with
-        member this.BaseUri = baseUri
+        member _.BaseUri = baseUri
 
-        member this.RenderAsync(context, cancel): Task = 
+        member _.RenderAsync(context, cancel) =
             task {
-                let! text = getText()
-                do! context.writer.WriteAsync(text)
+                let output =
+                    OutputContent.builder
+                    |> OutputContent.withRelativeUri relativeUri
+                    |> OutputContent.withContentType contentType
+                    |> OutputContent.withEncoding encoding
+                    |> OutputContent.withWriter (fun cancel stream ->
+                        task {
+                            use writer = new StreamWriter(stream, encoding, leaveOpen = true)
+                            do! writer.WriteAsync(text.AsMemory(), cancel)
+                        })
+                    |> OutputContent.build
+
+                return output
             }
 
-    interface IDisposable with
-        member this.Dispose() =
-            reader.Dispose()
-            loadLock.Dispose()
+        member _.Dispose() = ()
+
 
 type TextTemplateFactory() =
     static member val Default: ITemplateFactory = TextTemplateFactory()
@@ -46,5 +39,9 @@ type TextTemplateFactory() =
     interface ITemplateFactory with
         member this.CreateTemplateAsync(content, cancel) =
             task {
-                return new TextTemplate(content.reader, content.baseUri)
+                use reader =
+                    new StreamReader(content.Stream, content.Encoding, leaveOpen = true)
+
+                let! text = reader.ReadToEndAsync(cancel)
+                return new TextTemplate(text, content.BaseUri) :> ITemplate
             }

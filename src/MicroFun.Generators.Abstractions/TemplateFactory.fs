@@ -5,15 +5,31 @@ open System.Threading.Tasks
 
 
 type ITemplateFactory =
-    abstract member CreateTemplateAsync: content: TemplateContent * cancel: CancellationToken -> Task<ITemplate>
+    abstract member CreateTemplateAsync: content: IInputContent * cancel: CancellationToken -> Task<ITemplate>
+
 
 [<RequireQualifiedAccess>]
 module TemplateFactory =
     [<RequireQualifiedAccess>]
     module WithCancel =
-        let inline createTemplate cancel (content: TemplateContent) (template: ITemplateFactory) =
+        let createTemplate cancel (content: IInputContent) (template: ITemplateFactory) =
             template.CreateTemplateAsync(content, cancel)
 
 
-    let inline createTemplate (content: TemplateContent) (template: ITemplateFactory) =
-        template.CreateTemplateAsync(content, CancellationToken.None)
+    let createTemplate (content: IInputContent) =
+        WithCancel.createTemplate CancellationToken.None content
+
+
+type ITemplateFactorySelector =
+    abstract SelectFactory : contentType: string -> ITemplateFactory
+
+
+type SelectorTemplateFactory(selector: ITemplateFactorySelector) =
+    interface ITemplateFactory with
+        member _.CreateTemplateAsync(content, cancel) =
+            task {
+                let factory =
+                    selector.SelectFactory(content.ContentType)
+
+                return! factory.CreateTemplateAsync(content, cancel)
+            }

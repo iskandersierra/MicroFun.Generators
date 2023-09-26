@@ -1,20 +1,25 @@
 module MicroFun.Generators.Scriban.Tests.ScribanTemplateTests
 
 open System
+open System.Dynamic
+open Newtonsoft.Json
 open Xunit
 open Swensen.Unquote
+open FSharp.Interop.Dynamic
 
 open MicroFun.Generators
 open MicroFun.Generators.Scriban
 
 // ScribanTemplate.Scriban
 
-let scribanExtensionRegexSamples() =
+let scribanExtensionRegexSamples () =
     seq {
         let fileName = "template"
+
         for scribanPart in [ "sbn"; "scriban"; "SBN" ] do
             yield $"{fileName}.{scribanPart}"
             let subType = "html"
+
             for subTypeGlue in [ ""; "-"; "." ] do
                 yield $"{fileName}.{scribanPart}{subTypeGlue}{subType}"
     }
@@ -22,9 +27,10 @@ let scribanExtensionRegexSamples() =
 
 // https://marketplace.visualstudio.com/items?itemName=xoofx.scriban
 [<Theory>]
-[<MemberData(nameof(scribanExtensionRegexSamples))>]
+[<MemberData(nameof (scribanExtensionRegexSamples))>]
 let ``ScribanTemplate.Scriban.extensionRegex should accept all possible extensions`` (fileName: string) =
-    let match' = ScribanTemplate.Scriban.extensionRegex.Match(fileName)
+    let match' =
+        ScribanTemplate.Scriban.extensionRegex.Match(fileName)
 
     test <@ match'.Success @>
 
@@ -37,25 +43,27 @@ let ``ScribanTemplate.Scriban.extensionRegex should accept all possible extensio
 [<InlineData("template.hmtl")>]
 [<InlineData("scriban.hmtl")>]
 let ``ScribanTemplate.Scriban.extensionRegex should reject other extensions`` (fileName: string) =
-    let match' = ScribanTemplate.Scriban.extensionRegex.Match(fileName)
+    let match' =
+        ScribanTemplate.Scriban.extensionRegex.Match(fileName)
 
     test <@ not match'.Success @>
 
 
-let scribanContentTypeRegexSamples() =
+let scribanContentTypeRegexSamples () =
     seq {
         for groupName in [ "text"; "application" ] do
             for scribanPart in [ "sbn"; "scriban" ] do
-            yield $"{groupName}/{scribanPart}"
-            let subType = "html"
-            yield $"{groupName}/{subType}+{scribanPart}"
+                yield $"{groupName}/{scribanPart}"
+                let subType = "html"
+                yield $"{groupName}/{subType}+{scribanPart}"
     }
     |> Seq.map (fun contentType -> [| contentType :> obj |])
 
 [<Theory>]
-[<MemberData(nameof(scribanContentTypeRegexSamples))>]
+[<MemberData(nameof (scribanContentTypeRegexSamples))>]
 let ``ScribanTemplate.Scriban.contentTypeRegex should accept all possible contentTypes`` (fileName: string) =
-    let match' = ScribanTemplate.Scriban.contentTypeRegex.Match(fileName)
+    let match' =
+        ScribanTemplate.Scriban.contentTypeRegex.Match(fileName)
 
     test <@ match'.Success @>
 
@@ -66,28 +74,32 @@ let ``ScribanTemplate.Scriban.contentTypeRegex should accept all possible conten
 [<InlineData("text/scriban+html")>]
 [<InlineData("text/sbn+html")>]
 let ``ScribanTemplate.Scriban.contentTypeRegex should reject other contentTypes`` (fileName: string) =
-    let match' = ScribanTemplate.Scriban.contentTypeRegex.Match(fileName)
+    let match' =
+        ScribanTemplate.Scriban.contentTypeRegex.Match(fileName)
 
     test <@ not match'.Success @>
 
 
 // ScribanTemplate.DotLiquid
 
-let dotLiquidExtensionRegexSamples() =
+let dotLiquidExtensionRegexSamples () =
     seq {
         let fileName = "template"
+
         for dotLiquidPart in [ "liquid"; "dotliquid"; "dot-liquid" ] do
             yield $"{fileName}.{dotLiquidPart}"
             let subType = "html"
+
             for subTypeGlue in [ ""; "-"; "." ] do
                 yield $"{fileName}.{dotLiquidPart}{subTypeGlue}{subType}"
     }
     |> Seq.map (fun fileName -> [| fileName :> obj |])
 
 [<Theory>]
-[<MemberData(nameof(dotLiquidExtensionRegexSamples))>]
+[<MemberData(nameof (dotLiquidExtensionRegexSamples))>]
 let ``ScribanTemplate.DotLiquid.extensionRegex should accept all possible extensions`` (fileName: string) =
-    let match' = ScribanTemplate.DotLiquid.extensionRegex.Match(fileName)
+    let match' =
+        ScribanTemplate.DotLiquid.extensionRegex.Match(fileName)
 
     test <@ match'.Success @>
 
@@ -99,25 +111,27 @@ let ``ScribanTemplate.DotLiquid.extensionRegex should accept all possible extens
 [<InlineData("template.hmtl")>]
 [<InlineData("dotliquid.hmtl")>]
 let ``ScribanTemplate.DotLiquid.extensionRegex should reject other extensions`` (fileName: string) =
-    let match' = ScribanTemplate.DotLiquid.extensionRegex.Match(fileName)
+    let match' =
+        ScribanTemplate.DotLiquid.extensionRegex.Match(fileName)
 
     test <@ not match'.Success @>
 
 
-let dotLiquidContentTypeRegexSamples() =
+let dotLiquidContentTypeRegexSamples () =
     seq {
         for groupName in [ "text"; "application" ] do
             for dotLiquidPart in [ "liquid"; "dotliquid"; "dot-liquid" ] do
-            yield $"{groupName}/{dotLiquidPart}"
-            let subType = "html"
-            yield $"{groupName}/{subType}+{dotLiquidPart}"
+                yield $"{groupName}/{dotLiquidPart}"
+                let subType = "html"
+                yield $"{groupName}/{subType}+{dotLiquidPart}"
     }
     |> Seq.map (fun contentType -> [| contentType :> obj |])
 
 [<Theory>]
-[<MemberData(nameof(dotLiquidContentTypeRegexSamples))>]
+[<MemberData(nameof (dotLiquidContentTypeRegexSamples))>]
 let ``ScribanTemplate.DotLiquid.contentTypeRegex should accept all possible contentTypes`` (fileName: string) =
-    let match' = ScribanTemplate.DotLiquid.contentTypeRegex.Match(fileName)
+    let match' =
+        ScribanTemplate.DotLiquid.contentTypeRegex.Match(fileName)
 
     test <@ match'.Success @>
 
@@ -128,7 +142,8 @@ let ``ScribanTemplate.DotLiquid.contentTypeRegex should accept all possible cont
 [<InlineData("text/dotliquid+html")>]
 [<InlineData("text/liquid+html")>]
 let ``ScribanTemplate.DotLiquid.contentTypeRegex should reject other contentTypes`` (fileName: string) =
-    let match' = ScribanTemplate.DotLiquid.contentTypeRegex.Match(fileName)
+    let match' =
+        ScribanTemplate.DotLiquid.contentTypeRegex.Match(fileName)
 
     test <@ not match'.Success @>
 
@@ -144,21 +159,27 @@ let ``ScribanTemplateFactory.Default should be non-null`` () =
 [<Fact>]
 let ``ScribanTemplateFactory.CreateTemplateAsync should return a scriban-backed template`` () =
     task {
-        let baseUri = "https://www.example.com"
+        let baseUri = Uri("https://www.example.com")
 
-        let templateContent =
-            TemplateContent.ofText @"Hello {{if !name; name=""world""; end }}{{ name }}!"
-            |> TemplateContent.withContentType "text/plain+scriban"
-            |> TemplateContent.withBaseUri (Uri(baseUri))
+        let inputContent =
+            InputContentBuilder
+                .Create()
+                .WithText(@"Hello {{if !name; name=""world""; end }}{{ name }}!")
+                .WithContentType("text/plain+scriban")
+                .WithBaseUri(baseUri)
+                .Build()
 
         let! template =
             ScribanTemplateFactory.Default
-            |> TemplateFactory.createTemplate templateContent
+            |> TemplateFactory.createTemplate inputContent
 
         Assert.NotNull template
-        Assert.Equal(Uri(baseUri), template.BaseUri)
+        Assert.Equal(baseUri, template.BaseUri)
 
-        let! result = template |> Template.renderModel {| name = "Alice" |}
+        let! result =
+            template
+            |> Template.renderModel {| name = "Alice" |}
+            |> Task.bind OutputContent.toText
 
         test <@ result = "Hello Alice!" @>
     }
@@ -166,23 +187,128 @@ let ``ScribanTemplateFactory.CreateTemplateAsync should return a scriban-backed 
 [<Fact>]
 let ``ScribanTemplateFactory.CreateTemplateAsync should fail from a dotliquid template`` () =
     task {
-        let baseUri = "https://www.example.com"
+        let baseUri = Uri("https://www.example.com")
 
-        let templateContent =
-            TemplateContent.ofText @"Hello {% if name %}{{name}}{% else %}world{% endif %}!"
-            |> TemplateContent.withContentType "text/plain+liquid"
-            |> TemplateContent.withBaseUri (Uri(baseUri))
+        let inputContent =
+            InputContentBuilder
+                .Create()
+                .WithText(@"Hello {% if name %}{{name}}{% else %}world{% endif %}!")
+                .WithContentType("text/plain+liquid")
+                .WithBaseUri(baseUri)
+                .Build()
+
+        do!
+            Assert.ThrowsAnyAsync (fun () ->
+                task {
+                    let! template =
+                        ScribanTemplateFactory.Default
+                        |> TemplateFactory.createTemplate inputContent
+
+                    let! result =
+                        template
+                        |> Template.renderModel {| name = "Alice" |}
+                        |> Task.bind OutputContent.toText
+
+                    test <@ result = "Hello Alice!" @>
+                })
+            |> Task.ignore
+    }
+
+[<Fact>]
+let ``ScribanTemplate.RenderAsync should render anonymous objects`` () =
+    task {
+        let inputContent =
+            InputContent.ofText @"Hello {{ name }}<{{address.email}}>!"
 
         let! template =
             ScribanTemplateFactory.Default
-            |> TemplateFactory.createTemplate templateContent
+            |> TemplateFactory.createTemplate inputContent
 
-        Assert.NotNull template
-        Assert.Equal(Uri(baseUri), template.BaseUri)
+        let model =
+            {| name = "Alice"
+               address = {| email = "alice@examle.com" |} |}
 
-        let! result = template |> Template.renderModel {| name = "Alice" |}
+        let! result =
+            template
+            |> Template.renderModel model
+            |> Task.bind OutputContent.toText
 
-        test <@ result <> "Hello Alice!" @>
+        test <@ result = "Hello Alice<alice@examle.com>!" @>
+    }
+
+[<Fact>]
+let ``ScribanTemplate.RenderAsync should render Dictionary`` () =
+    task {
+        let inputContent =
+            InputContent.ofText @"Hello {{ name }}<{{address.email}}>!"
+
+        let! template =
+            ScribanTemplateFactory.Default
+            |> TemplateFactory.createTemplate inputContent
+
+        let model = dict [
+            "name", "Alice" :> obj
+            "address", {| email = "alice@examle.com" |} :> obj
+        ]
+
+        let! result =
+            template
+            |> Template.renderModel model
+            |> Task.bind OutputContent.toText
+
+        test <@ result = "Hello Alice<alice@examle.com>!" @>
+    }
+
+[<Fact>]
+let ``ScribanTemplate.RenderAsync should render ExpandoObject`` () =
+    task {
+        let inputContent =
+            InputContent.ofText @"Hello {{ name }}<{{address.email}}>!"
+
+        let! template =
+            ScribanTemplateFactory.Default
+            |> TemplateFactory.createTemplate inputContent
+
+        let model = ExpandoObject()
+        model?name <- "Alice"
+        model?address <- ExpandoObject()
+        model?address?email <- "alice@examle.com"
+
+        let! result =
+            template
+            |> Template.renderModel model
+            |> Task.bind OutputContent.toText
+
+        test <@ result = "Hello Alice<alice@examle.com>!" @>
+    }
+
+[<Fact>]
+let ``ScribanTemplate.RenderAsync should render Json dynamic object`` () =
+    task {
+        let inputContent =
+            InputContent.ofText @"Hello {{ name }}<{{address.email}}>!"
+
+        let! template =
+            ScribanTemplateFactory.Default
+            |> TemplateFactory.createTemplate inputContent
+
+        let json = """
+        {
+            "name": "Alice",
+            "address": {
+                "email": "alice@examle.com"
+            }
+        }
+        """
+
+        let model = JsonConvert.DeserializeObject<ExpandoObject>(json)
+
+        let! result =
+            template
+            |> Template.renderModel model
+            |> Task.bind OutputContent.toText
+
+        test <@ result = "Hello Alice<alice@examle.com>!" @>
     }
 
 
@@ -197,21 +323,27 @@ let ``DotLiquidTemplateFactory.Default should be non-null`` () =
 [<Fact>]
 let ``DotLiquidTemplateFactory.CreateTemplateAsync should return a dotliquid-backed template`` () =
     task {
-        let baseUri = "https://www.example.com"
+        let baseUri = Uri("https://www.example.com")
 
-        let templateContent =
-            TemplateContent.ofText @"Hello {% if name %}{{name}}{% else %}world{% endif %}!"
-            |> TemplateContent.withContentType "text/plain+liquid"
-            |> TemplateContent.withBaseUri (Uri(baseUri))
+        let inputContent =
+            InputContentBuilder
+                .Create()
+                .WithText(@"Hello {% if name %}{{name}}{% else %}world{% endif %}!")
+                .WithContentType("text/plain+liquid")
+                .WithBaseUri(baseUri)
+                .Build()
 
         let! template =
             DotLiquidTemplateFactory.Default
-            |> TemplateFactory.createTemplate templateContent
+            |> TemplateFactory.createTemplate inputContent
 
         Assert.NotNull template
-        Assert.Equal(Uri(baseUri), template.BaseUri)
+        Assert.Equal(baseUri, template.BaseUri)
 
-        let! result = template |> Template.renderModel {| name = "Alice" |}
+        let! result =
+            template
+            |> Template.renderModel {| name = "Alice" |}
+            |> Task.bind OutputContent.toText
 
         test <@ result = "Hello Alice!" @>
     }
@@ -219,20 +351,29 @@ let ``DotLiquidTemplateFactory.CreateTemplateAsync should return a dotliquid-bac
 [<Fact>]
 let ``DotLiquidTemplateFactory.CreateTemplateAsync should fail from a scriban template`` () =
     task {
-        let baseUri = "https://www.example.com"
+        let baseUri = Uri("https://www.example.com")
 
-        let templateContent =
-            TemplateContent.ofText @"Hello {{if !name; name=""world""; end }}{{ name }}!"
-            |> TemplateContent.withContentType "text/plain+scriban"
-            |> TemplateContent.withBaseUri (Uri(baseUri))
+        let inputContent =
+            InputContentBuilder
+                .Create()
+                .WithText(@"Hello {{if !name; name=""world""; end }}{{ name }}!")
+                .WithContentType("text/plain+scriban")
+                .WithBaseUri(baseUri)
+                .Build()
 
-        let! exn = Assert.ThrowsAsync<ArgumentException>(fun () ->
-            task {
-                let! _ =
-                    DotLiquidTemplateFactory.Default
-                    |> TemplateFactory.createTemplate templateContent
-                ()
-            })
+        do!
+            Assert.ThrowsAnyAsync (fun () ->
+                task {
+                    let! template =
+                        DotLiquidTemplateFactory.Default
+                        |> TemplateFactory.createTemplate inputContent
 
-        test <@ exn.Message.Contains "Error: Invalid token found `!`. Expecting <EOL>/end of line. at 0:11" @>
+                    let! result =
+                        template
+                        |> Template.renderModel {| name = "Alice" |}
+                        |> Task.bind OutputContent.toText
+
+                    test <@ result = "Hello Alice!" @>
+                })
+            |> Task.ignore
     }

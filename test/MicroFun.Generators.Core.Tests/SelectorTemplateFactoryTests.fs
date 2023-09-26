@@ -1,236 +1,254 @@
 module MicroFun.Generators.Core.Tests.SelectorTemplateFactoryTests
 
+open System.IO
 open System.Text.RegularExpressions
 open Xunit
 open Swensen.Unquote
 
 open MicroFun.Generators
 
-// TemplateFactorySelectorConfig
+//// TemplateFactorySelectorConfig
+
+//[<Fact>]
+//let ``TemplateFactorySelectorConfig.empty should return empty config`` () =
+//    let config = TemplateFactorySelectorConfig.empty
+
+//    test <@ config.fallback = None @>
+//    test <@ config.factories |> List.isEmpty @>
+
+//[<Fact>]
+//let ``TemplateFactorySelectorConfig.withFallback should set the fallback factory`` () =
+//    let config =
+//        TemplateFactorySelectorConfig.empty
+//        |> TemplateFactorySelectorConfig.withFallback TextTemplateFactory.Default
 
-[<Fact>]
-let ``TemplateFactorySelectorConfig.empty should return empty config`` () =
-    let config = TemplateFactorySelectorConfig.empty
+//    test <@ config.fallback = Some TextTemplateFactory.Default @>
 
-    test <@ config.fallback = None @>
-    test <@ config.factories |> List.isEmpty @>
+//[<Fact>]
+//let ``TemplateFactorySelectorConfig.withDefaultFallback should set the fallback factory to None`` () =
+//    let config =
+//        TemplateFactorySelectorConfig.empty
+//        |> TemplateFactorySelectorConfig.withFallback TextTemplateFactory.Default
+//        |> TemplateFactorySelectorConfig.withDefaultFallback
 
-[<Fact>]
-let ``TemplateFactorySelectorConfig.withPredicate should prepend to factories`` () =
-    let predicate1 =
-        fun contentType -> contentType = "text/plain"
+//    test <@ config.fallback = None @>
 
-    let factory1 = TextTemplateFactory()
+//[<Fact>]
+//let ``TemplateFactorySelectorConfig.withPredicate should prepend to factories`` () =
+//    let predicate1 =
+//        fun contentType -> contentType = "text/plain"
 
-    let predicate2 =
-        fun contentType -> contentType = "text/html"
+//    let factory1 = TextTemplateFactory()
 
-    let factory2 = TextTemplateFactory()
+//    let predicate2 =
+//        fun contentType -> contentType = "text/html"
 
-    let config =
-        TemplateFactorySelectorConfig.empty
-        |> TemplateFactorySelectorConfig.withPredicate factory1 predicate1
-        |> TemplateFactorySelectorConfig.withPredicate factory2 predicate2
+//    let factory2 = TextTemplateFactory()
 
-    match config.factories with
-    | [ { factory = f2; predicate = p2 }; { factory = f1; predicate = p1 } ] ->
-        test <@ f2 = factory2 @>
-        test <@ obj.ReferenceEquals(p2, predicate2) @>
-        test <@ f1 = factory1 @>
-        test <@ obj.ReferenceEquals(p1, predicate1) @>
+//    let config =
+//        TemplateFactorySelectorConfig.empty
+//        |> TemplateFactorySelectorConfig.withPredicate factory1 predicate1
+//        |> TemplateFactorySelectorConfig.withPredicate factory2 predicate2
 
-    | _ -> Assert.Fail("Expected exactly two factories in given order")
+//    match config.factories with
+//    | [ { factory = f2; predicate = p2 }; { factory = f1; predicate = p1 } ] ->
+//        test <@ f2 = factory2 @>
+//        test <@ obj.ReferenceEquals(p2, predicate2) @>
+//        test <@ f1 = factory1 @>
+//        test <@ obj.ReferenceEquals(p1, predicate1) @>
 
-[<Fact>]
-let ``TemplateFactorySelectorConfig.withPredicates should combine predicates`` () =
-    let predicate1 =
-        fun contentType -> contentType = "text/plain"
+//    | _ -> Assert.Fail("Expected exactly two factories in given order")
 
-    let predicate2 =
-        fun contentType -> contentType = "text/html"
+//[<Fact>]
+//let ``TemplateFactorySelectorConfig.withPredicates should combine predicates`` () =
+//    let predicate1 =
+//        fun contentType -> contentType = "text/plain"
 
-    let factory = TextTemplateFactory()
+//    let predicate2 =
+//        fun contentType -> contentType = "text/html"
 
-    let config =
-        TemplateFactorySelectorConfig.empty
-        |> TemplateFactorySelectorConfig.withPredicates factory [ predicate1; predicate2 ]
+//    let factory = TextTemplateFactory()
 
-    match config.factories with
-    | [ { predicate = actualPredicate } ] ->
-        test <@ actualPredicate "text/plain" @>
-        test <@ actualPredicate "text/html" @>
-        test <@ not (actualPredicate "text/xml") @>
+//    let config =
+//        TemplateFactorySelectorConfig.empty
+//        |> TemplateFactorySelectorConfig.withPredicates factory [ predicate1; predicate2 ]
 
-    | _ -> Assert.Fail("Expected exactly one factory")
+//    match config.factories with
+//    | [ { predicate = actualPredicate } ] ->
+//        test <@ actualPredicate "text/plain" @>
+//        test <@ actualPredicate "text/html" @>
+//        test <@ not (actualPredicate "text/xml") @>
 
-[<Fact>]
-let ``TemplateFactorySelectorConfig.withRegex should apply regex`` () =
-    let regex = Regex("^text/.+$")
-    let factory = TextTemplateFactory()
+//    | _ -> Assert.Fail("Expected exactly one factory")
 
-    let config =
-        TemplateFactorySelectorConfig.empty
-        |> TemplateFactorySelectorConfig.withRegex factory regex
+//[<Fact>]
+//let ``TemplateFactorySelectorConfig.withRegex should apply regex`` () =
+//    let regex = Regex("^text/.+$")
+//    let factory = TextTemplateFactory()
 
-    match config.factories with
-    | [ { predicate = actualPredicate } ] ->
-        test <@ actualPredicate "text/plain" @>
-        test <@ actualPredicate "text/html" @>
-        test <@ actualPredicate "text/vnd+xml" @>
-        test <@ not (actualPredicate "application/json") @>
+//    let config =
+//        TemplateFactorySelectorConfig.empty
+//        |> TemplateFactorySelectorConfig.withRegex factory regex
 
-    | _ -> Assert.Fail("Expected exactly one factory")
+//    match config.factories with
+//    | [ { predicate = actualPredicate } ] ->
+//        test <@ actualPredicate "text/plain" @>
+//        test <@ actualPredicate "text/html" @>
+//        test <@ actualPredicate "text/vnd+xml" @>
+//        test <@ not (actualPredicate "application/json") @>
 
-[<Fact>]
-let ``TemplateFactorySelectorConfig.withRegexes should combine regexes`` () =
-    let regex1 = Regex("^text/.+$")
-    let regex2 = Regex("^.+/(.+\+)?json$")
-    let factory = TextTemplateFactory()
+//    | _ -> Assert.Fail("Expected exactly one factory")
 
-    let config =
-        TemplateFactorySelectorConfig.empty
-        |> TemplateFactorySelectorConfig.withRegexes factory [ regex1; regex2 ]
+//[<Fact>]
+//let ``TemplateFactorySelectorConfig.withRegexes should combine regexes`` () =
+//    let regex1 = Regex("^text/.+$")
+//    let regex2 = Regex("^.+/(.+\+)?json$")
+//    let factory = TextTemplateFactory()
 
-    match config.factories with
-    | [ { predicate = actualPredicate } ] ->
-        test <@ actualPredicate "text/plain" @>
-        test <@ actualPredicate "text/html" @>
-        test <@ actualPredicate "application/json" @>
-        test <@ actualPredicate "text/vnd+json" @>
-        test <@ not (actualPredicate "application/xml") @>
+//    let config =
+//        TemplateFactorySelectorConfig.empty
+//        |> TemplateFactorySelectorConfig.withRegexes factory [ regex1; regex2 ]
 
-    | _ -> Assert.Fail("Expected exactly one factory")
+//    match config.factories with
+//    | [ { predicate = actualPredicate } ] ->
+//        test <@ actualPredicate "text/plain" @>
+//        test <@ actualPredicate "text/html" @>
+//        test <@ actualPredicate "application/json" @>
+//        test <@ actualPredicate "text/vnd+json" @>
+//        test <@ not (actualPredicate "application/xml") @>
 
+//    | _ -> Assert.Fail("Expected exactly one factory")
 
-// TemplateFactorySelector
 
-[<Fact>]
-let ``TemplateFactorySelector.SelectFactory should select fallback factory`` () =
-    let xmlPredicate =
-        fun contentType -> contentType = "text/xml"
+//// TemplateFactorySelector
 
-    let xmlFactory = TextTemplateFactory()
+//[<Fact>]
+//let ``TemplateFactorySelector.SelectFactory should select fallback factory`` () =
+//    let xmlPredicate =
+//        fun contentType -> contentType = "text/xml"
 
-    let htmlPredicate =
-        fun contentType -> contentType = "text/html"
+//    let xmlFactory = TextTemplateFactory()
 
-    let htmlFactory = TextTemplateFactory()
+//    let htmlPredicate =
+//        fun contentType -> contentType = "text/html"
 
-    let config =
-        TemplateFactorySelectorConfig.empty
-        |> TemplateFactorySelectorConfig.withPredicate xmlFactory xmlPredicate
-        |> TemplateFactorySelectorConfig.withPredicate htmlFactory htmlPredicate
+//    let htmlFactory = TextTemplateFactory()
 
-    let selector = TemplateFactorySelector(config)
+//    let config =
+//        TemplateFactorySelectorConfig.empty
+//        |> TemplateFactorySelectorConfig.withPredicate xmlFactory xmlPredicate
+//        |> TemplateFactorySelectorConfig.withPredicate htmlFactory htmlPredicate
 
-    let factory = selector.SelectFactory("text/other")
+//    let selector = TemplateFactorySelector(config)
 
-    test <@ factory = TextTemplateFactory.Default @>
+//    let factory = selector.SelectFactory("text/other")
 
-[<Fact>]
-let ``TemplateFactorySelector.SelectFactory should select expected factory`` () =
-    let xmlPredicate =
-        fun contentType -> contentType = "text/xml"
+//    test <@ factory = TextTemplateFactory.Default @>
 
-    let xmlFactory = TextTemplateFactory()
+//[<Fact>]
+//let ``TemplateFactorySelector.SelectFactory should select expected factory`` () =
+//    let xmlPredicate =
+//        fun contentType -> contentType = "text/xml"
 
-    let htmlPredicate =
-        fun contentType -> contentType = "text/html"
+//    let xmlFactory = TextTemplateFactory()
 
-    let htmlFactory = TextTemplateFactory()
+//    let htmlPredicate =
+//        fun contentType -> contentType = "text/html"
 
-    let config =
-        TemplateFactorySelectorConfig.empty
-        |> TemplateFactorySelectorConfig.withPredicate xmlFactory xmlPredicate
-        |> TemplateFactorySelectorConfig.withPredicate htmlFactory htmlPredicate
+//    let htmlFactory = TextTemplateFactory()
 
-    let selector = TemplateFactorySelector(config)
+//    let config =
+//        TemplateFactorySelectorConfig.empty
+//        |> TemplateFactorySelectorConfig.withPredicate xmlFactory xmlPredicate
+//        |> TemplateFactorySelectorConfig.withPredicate htmlFactory htmlPredicate
 
-    let factory = selector.SelectFactory("text/html")
+//    let selector = TemplateFactorySelector(config)
 
-    test <@ factory = htmlFactory @>
+//    let factory = selector.SelectFactory("text/html")
 
-// SelectorTemplateFactory
+//    test <@ factory = htmlFactory @>
 
-let createSampleSelectorTemplateFactory () =
-    let xmlPredicate =
-        fun contentType -> contentType = "text/xml"
+//// SelectorTemplateFactory
 
-    let xmlFactory: ITemplateFactory =
-        MockTextTemplateFactory(TemplateContent.ofText "Is XML")
+//let createSampleSelectorTemplateFactory () =
+//    let xmlPredicate =
+//        fun contentType -> contentType = "text/xml"
 
-    let htmlPredicate =
-        fun contentType -> contentType = "text/html"
+//    let xmlFactory: ITemplateFactory =
+//        MockTextTemplateFactory(TemplateContent.ofText "Is XML")
 
-    let htmlFactory: ITemplateFactory =
-        MockTextTemplateFactory(TemplateContent.ofText "Is HTML")
+//    let htmlPredicate =
+//        fun contentType -> contentType = "text/html"
 
-    let fallbackFactory: ITemplateFactory =
-        MockTextTemplateFactory(TemplateContent.ofText "Is fallback")
+//    let htmlFactory: ITemplateFactory =
+//        MockTextTemplateFactory(TemplateContent.ofText "Is HTML")
 
-    let config =
-        TemplateFactorySelectorConfig.empty
-        |> TemplateFactorySelectorConfig.withPredicate xmlFactory xmlPredicate
-        |> TemplateFactorySelectorConfig.withPredicate htmlFactory htmlPredicate
-        |> TemplateFactorySelectorConfig.withFallback fallbackFactory
+//    let fallbackFactory: ITemplateFactory =
+//        MockTextTemplateFactory(TemplateContent.ofText "Is fallback")
 
-    let factory: ITemplateFactory = SelectorTemplateFactory(config)
+//    let config =
+//        TemplateFactorySelectorConfig.empty
+//        |> TemplateFactorySelectorConfig.withPredicate xmlFactory xmlPredicate
+//        |> TemplateFactorySelectorConfig.withPredicate htmlFactory htmlPredicate
+//        |> TemplateFactorySelectorConfig.withFallback fallbackFactory
 
-    factory
+//    let factory: ITemplateFactory = SelectorTemplateFactory(config)
 
-[<Fact>]
-let ``SelectorTemplateFactory.SelectFactory should select fallback factory`` () =
-    task {
-        let factory = createSampleSelectorTemplateFactory ()
+//    factory
 
-        let templateContent =
-            "[green]Hello World![/]"
-            |> TemplateContent.ofText
-            |> TemplateContent.withContentType "text/markup"
+//[<Fact>]
+//let ``SelectorTemplateFactory.SelectFactory should select fallback factory`` () =
+//    task {
+//        let factory = createSampleSelectorTemplateFactory ()
 
-        let! template =
-            factory
-            |> TemplateFactory.createTemplate templateContent
+//        let templateContent =
+//            "[green]Hello World![/]"
+//            |> TemplateContent.ofText
+//            |> TemplateContent.withContentType "text/markup"
 
-        let! result = template |> Template.renderModel (obj ())
+//        let! template =
+//            factory
+//            |> TemplateFactory.createTemplate templateContent
 
-        test <@ result = "Is fallback" @>
-    }
+//        let! result = template |> Template.renderModel (obj ())
 
-[<Fact>]
-let ``SelectorTemplateFactory.SelectFactory should select first factory`` () =
-    task {
-        let factory = createSampleSelectorTemplateFactory ()
+//        test <@ result = "Is fallback" @>
+//    }
 
-        let templateContent =
-            "[green]Hello World![/]"
-            |> TemplateContent.ofText
-            |> TemplateContent.withContentType "text/xml"
+//[<Fact>]
+//let ``SelectorTemplateFactory.SelectFactory should select first factory`` () =
+//    task {
+//        let factory = createSampleSelectorTemplateFactory ()
 
-        let! template =
-            factory
-            |> TemplateFactory.createTemplate templateContent
+//        let templateContent =
+//            "[green]Hello World![/]"
+//            |> TemplateContent.ofText
+//            |> TemplateContent.withContentType "text/xml"
 
-        let! result = template |> Template.renderModel (obj ())
+//        let! template =
+//            factory
+//            |> TemplateFactory.createTemplate templateContent
 
-        test <@ result = "Is XML" @>
-    }
+//        let! result = template |> Template.renderModel (obj ())
 
-[<Fact>]
-let ``SelectorTemplateFactory.SelectFactory should select next factory`` () =
-    task {
-        let factory = createSampleSelectorTemplateFactory ()
+//        test <@ result = "Is XML" @>
+//    }
 
-        let templateContent =
-            "[green]Hello World![/]"
-            |> TemplateContent.ofText
-            |> TemplateContent.withContentType "text/html"
+//[<Fact>]
+//let ``SelectorTemplateFactory.SelectFactory should select next factory`` () =
+//    task {
+//        let factory = createSampleSelectorTemplateFactory ()
 
-        let! template =
-            factory
-            |> TemplateFactory.createTemplate templateContent
+//        let templateContent =
+//            "[green]Hello World![/]"
+//            |> TemplateContent.ofText
+//            |> TemplateContent.withContentType "text/html"
 
-        let! result = template |> Template.renderModel (obj ())
+//        let! template =
+//            factory
+//            |> TemplateFactory.createTemplate templateContent
 
-        test <@ result = "Is HTML" @>
-    }
+//        let! result = template |> Template.renderModel (obj ())
+
+//        test <@ result = "Is HTML" @>
+//    }

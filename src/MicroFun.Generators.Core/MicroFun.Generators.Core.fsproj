@@ -7,9 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Preamble.fs" />
     <Compile Include="TextTemplate.fs" />
-    <Compile Include="SelectorTemplateFactory.fs" />
+    <Compile Include="SequentialSelector.fs" />
   </ItemGroup>
 
   <ItemGroup>

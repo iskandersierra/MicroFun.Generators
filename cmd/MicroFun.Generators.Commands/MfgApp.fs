@@ -68,19 +68,13 @@ module MfgApp =
         services
             .AddSingleton<HttpClient>()
             .AddSingleton<Lazy<HttpClient>>(fun svp -> lazy (svp.GetRequiredService<HttpClient>()))
-            .AddSingleton<ITemplateFactory>(fun svp ->
-                let config =
-                    TemplateFactorySelectorConfig.empty
-                    |> TemplateFactorySelectorConfig.withRegexes
-                        ScribanTemplateFactory.Default
-                        [ ScribanTemplate.Scriban.extensionRegex
-                          ScribanTemplate.Scriban.contentTypeRegex ]
-                    |> TemplateFactorySelectorConfig.withRegexes
-                        DotLiquidTemplateFactory.Default
-                        [ ScribanTemplate.DotLiquid.extensionRegex
-                          ScribanTemplate.DotLiquid.contentTypeRegex ]
-
-                SelectorTemplateFactory(config) :> ITemplateFactory)
+            .AddSingleton<ITemplateFactory>(fun _ ->
+                SequentialSelector.builder
+                |> ScribanTemplate.Scriban.configSelector
+                |> ScribanTemplate.DotLiquid.configSelector
+                |> SequentialSelector.build
+                |> SelectorTemplateFactory
+                :> ITemplateFactory)
         |> ignore
 
         services
