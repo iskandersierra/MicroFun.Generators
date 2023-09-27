@@ -1,0 +1,4 @@
+name: openapi
+title: OpenAPI Project Template
+description: |
+  OpenAPI Project Template allows to generate a client for a given OpenAPI specification.

@@ -6,7 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Preamble.fs" />
     <Compile Include="OutputContentSpecterConsoleUploader.fs" />
+    <Compile Include="Config\ConfigSettings.fs" />
+    <Compile Include="Config\ConfigShowCommand.fs" />
+    <Compile Include="Config\ConfigInitCommand.fs" />
+    <Compile Include="Config\ConfigExtensions.fs" />
     <Compile Include="ItemCommand.fs" />
     <Compile Include="MfgApp.fs" />
   </ItemGroup>

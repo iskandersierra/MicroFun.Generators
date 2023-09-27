@@ -56,8 +56,7 @@ module MfgApp =
             |> ignore
 
             mfg
-                .AddCommand<ItemCommand>("item")
-                .WithDescription("Generate code for single snippet or file")
+                .AddConfigCommands()
             |> ignore)
 
         app

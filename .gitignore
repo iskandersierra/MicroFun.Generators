@@ -364,3 +364,6 @@ FodyWeavers.xsd
 
 # Nuget Package Output
 .nupkg/
+
+# Nuget Package Output
+.output/
