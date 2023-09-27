@@ -7,6 +7,7 @@ open Spectre.Console
 open Spectre.Console.Cli
 
 open MicroFun.Generators
+open MicroFun.Generators.Json
 open MicroFun.Generators.Scriban
 
 module MfgApp =
@@ -42,7 +43,6 @@ module MfgApp =
                 |> ignore
 
 
-
     let create (services: IServiceCollection) =
         let registrar = TypeRegistrar(services)
         let app = CommandApp(registrar)
@@ -67,7 +67,7 @@ module MfgApp =
 
         services
             .AddSingleton<HttpClient>()
-            .AddSingleton<Lazy<HttpClient>>(fun svp -> lazy (svp.GetRequiredService<HttpClient>()))
+
             .AddSingleton<ITemplateFactory>(fun _ ->
                 SequentialSelector.builder
                 |> ScribanTemplate.Scriban.configSelector
@@ -75,6 +75,18 @@ module MfgApp =
                 |> SequentialSelector.build
                 |> SelectorTemplateFactory
                 :> ITemplateFactory)
+
+            .AddSingleton<IInputContentUriLoader>(fun _ ->
+                InputContentFileLoader.Default
+                :> IInputContentUriLoader)
+
+            .AddSingleton<IInputModelLoader>(fun _ ->
+                InputModelDynamicJsonLoader()
+                :> IInputModelLoader)
+
+            .AddSingleton<IOutputContentUploader>(fun _ ->
+                OutputContentSpecterConsoleUploader()
+                :> IOutputContentUploader)
         |> ignore
 
         services

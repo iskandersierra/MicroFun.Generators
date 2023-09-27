@@ -13,8 +13,10 @@
   <ItemGroup>
     <Compile Include="Preamble.fs" />
     <Compile Include="InputContent.fs" />
+    <Compile Include="InputContentUriLoader.fs" />
     <Compile Include="InputModel.fs" />
     <Compile Include="OutputContent.fs" />
+    <Compile Include="OutputContentUriUploader.fs" />
     <Compile Include="Template.fs" />
     <Compile Include="TemplateFactory.fs" />
   </ItemGroup>

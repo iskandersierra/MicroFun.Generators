@@ -6,8 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Preamble.fs" />
-    <Compile Include="Templating.fs" />
+    <Compile Include="OutputContentSpecterConsoleUploader.fs" />
     <Compile Include="ItemCommand.fs" />
     <Compile Include="MfgApp.fs" />
   </ItemGroup>
@@ -23,6 +22,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\MicroFun.Generators.Abstractions\MicroFun.Generators.Abstractions.fsproj" />
     <ProjectReference Include="..\..\src\MicroFun.Generators.Core\MicroFun.Generators.Core.fsproj" />
+    <ProjectReference Include="..\..\src\MicroFun.Generators.Json\MicroFun.Generators.Json.fsproj" />
     <ProjectReference Include="..\..\src\MicroFun.Generators.Scriban\MicroFun.Generators.Scriban.fsproj" />
   </ItemGroup>
 

@@ -31,6 +31,26 @@ module Seq =
 
 
 [<RequireQualifiedAccess>]
+module Uri =
+    let asAbsolutePathIfRelative (uri: Uri) =
+        if not uri.IsAbsoluteUri then
+            let path = uri.OriginalString
+            let path = System.IO.Path.GetFullPath(path)
+            Uri(path, UriKind.Absolute)
+        else
+            uri
+
+
+[<RequireQualifiedAccess>]
+module Option =
+    let tryWith (fn: unit -> 'a) =
+        try
+            Some (fn())
+        with
+        | _ -> None
+
+
+[<RequireQualifiedAccess>]
 module Task =
 
     let bind (f: 'a -> Task<'b>) (ma: Task<'a>) =
