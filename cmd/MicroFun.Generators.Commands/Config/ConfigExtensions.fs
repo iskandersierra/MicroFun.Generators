@@ -1,6 +1,7 @@
 [<AutoOpen>]
 module MicroFun.Generators.Commands.ConfigExtensions
 
+open Microsoft.Extensions.DependencyInjection
 open Spectre.Console.Cli
 
 open MicroFun.Generators.Commands.Config
@@ -19,3 +20,10 @@ type IConfigurator with
         |> ignore
 
         this
+
+
+type IServiceCollection with
+    member this.AddConfigServices () =
+        this
+            .AddSingleton(ConfigRepositoryOptions())
+            .AddSingleton<IConfigRepository, ConfigRepository>()

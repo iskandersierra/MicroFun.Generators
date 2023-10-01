@@ -1,4 +1,39 @@
 name: openapi
+aliases: ["swagger"]
 title: OpenAPI Project Template
 description: |
   OpenAPI Project Template allows to generate a client for a given OpenAPI specification.
+
+parameters:
+  - name: type
+    aliases: ["t"]
+    type: enum
+    default: client
+    values:
+      - name: client
+        title: Client
+        description: Generate a client for a given OpenAPI specification
+        aliases: ["c"]
+
+      - name: server
+        title: Server
+        description: Generate a server for a given OpenAPI specification
+        aliases: ["s"]
+
+      - name: doc
+        title: Documentation
+        description: Generate documentation for a given OpenAPI specification
+        aliases: ["documentation", "docs", "d"]
+
+  - name: language
+    title: Language
+    description: |
+      The language to generate the code for.
+    aliases: ["l", "lang"]
+    type: enum
+    default: csharp
+    values:
+      - name: csharp
+        title: C#
+        description: C# OpenAPI code generator
+        aliases: ["cs", "c#"]

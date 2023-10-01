@@ -86,6 +86,8 @@ module MfgApp =
             .AddSingleton<IOutputContentUploader>(fun _ ->
                 OutputContentSpecterConsoleUploader()
                 :> IOutputContentUploader)
+
+            .AddConfigServices()
         |> ignore
 
         services
